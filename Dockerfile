@@ -33,7 +33,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && rm "terraform_${TF_VERSION}_linux_$ARCH.zip" "terraform_${TF_VERSION}_SHA256SUMS" \
     && terraform version
 
-FROM debian:bullseye-slim
+FROM debian:unstable-slim
 
 WORKDIR /root/
 
