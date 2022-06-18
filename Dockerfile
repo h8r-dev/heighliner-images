@@ -34,6 +34,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && terraform version
 
 FROM debian:unstable-slim
+RUN apt-get update && apt-get install ca-certificates -y
 
 WORKDIR /root/
 
