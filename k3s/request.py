@@ -25,6 +25,7 @@ def main():
     }
 
     print("Callback Url: {}".format(callback_url))
+    print("Data to send: ")
     print(data)
 
     res = requests.patch(callback_url, json=data)

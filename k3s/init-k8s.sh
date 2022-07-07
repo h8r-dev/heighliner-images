@@ -19,9 +19,14 @@ PRIVATE_KEY=/root/.ssh/private-key.pem
 
 # Add IP to SAN of kube-apiserver
 # Reference: https://github.com/k3s-io/k3s/issues/3369
-ssh -i $PRIVATE_KEY root@$IP \
-  -o StrictHostKeyChecking=no \
-  curl -vk --resolve $IP:6443:127.0.0.1 https://$IP:6443/ping
+# Check if $IP existed in SAN records, if not, add it until it is found in record.
+while ! ssh -i $PRIVATE_KEY root@$IP -o StrictHostKeyChecking=no kubectl -n kube-system get secret k3s-serving -o yaml | grep $IP; do
+  echo "Adding $IP to SAN of kube-apiserver"
+  ssh -i $PRIVATE_KEY root@$IP \
+    -o StrictHostKeyChecking=no \
+    curl -vk --resolve $IP:6443:127.0.0.1 https://$IP:6443/ping
+  sleep 3
+done
 
 # Init a k8s cluster
 # Pass the SSH key file content to /root/private-key.pem
