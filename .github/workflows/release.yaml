@@ -10,11 +10,20 @@ on:
     branches:
       - 'main'
 
-env:
-  DOCKER_HUB_IMAGE_NAME: heighlinerdev/hln-debian
 jobs:
-  docker:
+  build-and-push-images:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./hln/Dockerfile
+            image: heighlinerdev/hln-debian
+            dir: ./hln/
+          - dockerfile: ./k3s/Dockerfile
+            image: heighlinerdev/create-k3s-cluster
+            dir: ./k3s/
+
     steps:
       -
         name: Checkout
@@ -30,8 +39,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: |
-            ${{env.DOCKER_HUB_IMAGE_NAME}}
+          images: ${{ matrix.image }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -48,7 +56,8 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ${{ matrix.dir }}
+          file: ${{ matrix.dockerfile }}
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
