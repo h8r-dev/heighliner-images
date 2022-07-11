@@ -18,7 +18,7 @@ IP=$(cat ./ecs-ip.txt)
 PRIVATE_KEY=/root/.ssh/private-key.pem
 
 # Make sure the server is running.
-while ! ssh -i $PRIVATE_KEY root@$IP -o StrictHostKeyChecking=no ls /; do
+while ! ssh -i $PRIVATE_KEY root@$IP -o StrictHostKeyChecking=no echo "hi"; do
   echo "Waiting for the server: $IP to be ready!"
   sleep 3
 done
@@ -30,8 +30,8 @@ while ! ssh -i $PRIVATE_KEY root@$IP -o StrictHostKeyChecking=no kubectl -n kube
   echo "Adding $IP to SAN of kube-apiserver"
   ssh -i $PRIVATE_KEY root@$IP \
     -o StrictHostKeyChecking=no \
-    curl -vk --resolve $IP:6443:127.0.0.1 https://$IP:6443/ping
-  sleep 1
+    curl -k --resolve $IP:6443:127.0.0.1 https://$IP:6443/ping
+  sleep 3
 done
 
 # Init a k8s cluster
