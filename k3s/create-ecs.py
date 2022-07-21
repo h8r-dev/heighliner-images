@@ -35,15 +35,15 @@ class AliyunRunInstances(object):
         # 实例所属的地域ID
         self.region_id = REGION
         # 实例的资源规格
-        self.instance_type = 'ecs.c5.xlarge'
+        self.instance_type = 'ecs.c7.xlarge'
         # 实例的计费方式
         self.instance_charge_type = 'PostPaid'
 
         # 镜像ID, Custom image, with k3s, infra components installed.
-        self.image_id = 'm-j6c6vb9bfm8lgc2cwj6r'
+        #  self.image_id = 'm-j6caa0e3yg1nxr7a3nqv'
 
         # Base Ubuntu Image.
-        #  self.image_id = 'ubuntu_20_04_x64_20G_alibase_20220524.vhd'
+        self.image_id = 'ubuntu_20_04_x64_20G_alibase_20220524.vhd'
 
         # 指定新创建实例所属于的安全组ID
         self.security_group_id = 'sg-j6c0ccak9v1pjsyrsliv'
